@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .emi-calculator {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="emi-calculator">
+        <h2>EMI Calculator</h2>
+        <label for="loanAmount">Loan Amount (₹)</label>
+        <input type="number" id="loanAmount" placeholder="Enter Loan Amount">
+        <label for="loanTenure">Loan Tenure</label>
+        <input type="number" id="loanTenure" placeholder="Enter Loan Tenure">
+        <select id="tenureUnit">
+            <option value="months">Months</option>
+            <option value="years">Years</option>
+        </select>
+        <label for="interestRate">Interest Rate (%)</label>
+        <input type="number" id="interestRate" placeholder="Enter Interest Rate">
+        <button onclick="calculateEMI()">Calculate EMI</button>
+        <div id="emiResult"></div>
+    </div>
+
+    <script>
+        function calculateEMI() {
+            const loanAmount = parseFloat(document.getElementById("loanAmount").value);
+            let loanTenure = parseFloat(document.getElementById("loanTenure").value);
+            const tenureUnit = document.getElementById("tenureUnit").value;
+            const interestRate = parseFloat(document.getElementById("interestRate").value);
+
+            if (isNaN(loanAmount) || isNaN(loanTenure) || isNaN(interestRate)) {
+                document.getElementById("emiResult").innerHTML = "Please enter valid values.";
+                return;
+            }
+
+            if (tenureUnit === "years") {
+                loanTenure = loanTenure * 12;
+            }
+
+            const monthlyInterestRate = interestRate / 12 / 100;
+            const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTenure)) / (Math.pow(1 + monthlyInterestRate, loanTenure) - 1);
+
+            const totalAmount = emi * loanTenure;
+            const totalInterest = totalAmount - loanAmount;
+
+            document.getElementById("emiResult").innerHTML = `Your EMI is ₹${emi.toFixed(2)} per month.<br>
+            Total Amount Payable: ₹${totalAmount.toFixed(2)}<br>
+            Total Interest Payable: ₹${totalInterest.toFixed(2)}`;
+        }
+        
+    </script>
+</body>
+</html>
